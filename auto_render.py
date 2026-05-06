@@ -18,7 +18,6 @@ from utils import default_task_name, get_motif_info, is_benchmark_pdb
 
 DATA_DIR = 'data/'
 RESULT_DIR = 'results/'
-MOTIFS_DIR = 'results/motifs/'
 VIEWS_DIR = 'views/'
 
 # Reference-style palette
@@ -103,14 +102,16 @@ for pdb in pdb_list:
         print(f'[auto_render] Loaded {pdb} in interactive mode (skipping ray/PNG).')
         continue
 
+    pdb_out_dir = os.path.join(RESULT_DIR, pdb)
+    os.makedirs(pdb_out_dir, exist_ok=True)
+
     print(f'[auto_render] Rendering {pdb}...')
     cmd.ray(2000, 2000)
-    out_path = RESULT_DIR + f'{pdb}.png'
+    out_path = os.path.join(pdb_out_dir, f'{pdb}_full.png')
     cmd.png(out_path, dpi=300)
     print(f'[auto_render] Saved {out_path}')
 
     if motif_info is not None:
-        os.makedirs(MOTIFS_DIR, exist_ok=True)
         # Kill depth-cue fog and use ortho projection so the close-up background
         # stays crisp instead of fading toward the (white) background color.
         cmd.set('depth_cue', 0)
@@ -125,7 +126,7 @@ for pdb in pdb_list:
             cmd.clip('slab', 200)
             print(f'[auto_render] Rendering motif {letter} (resi {resi}) for {pdb}...')
             cmd.ray(2000, 2000)
-            motif_out = os.path.join(MOTIFS_DIR, f'{pdb}_motif_{letter}.png')
+            motif_out = os.path.join(pdb_out_dir, f'{pdb}_motif_{letter}.png')
             cmd.png(motif_out, dpi=300)
             print(f'[auto_render] Saved {motif_out}')
         cmd.set('depth_cue', 1)
