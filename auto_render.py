@@ -113,7 +113,7 @@ for pdb in pdb_list:
         os.makedirs(MOTIFS_DIR, exist_ok=True)
         for idx, resi in enumerate(motif_info['motif_resi']):
             letter = chr(ord('a') + idx)
-            cmd.zoom(f"{pdb} and resi {resi}", buffer=8)
+            cmd.zoom(f"{pdb} and resi {resi}", buffer=3)
             print(f'[auto_render] Rendering motif {letter} (resi {resi}) for {pdb}...')
             cmd.ray(2000, 2000)
             motif_out = os.path.join(MOTIFS_DIR, f'{pdb}_motif_{letter}.png')
