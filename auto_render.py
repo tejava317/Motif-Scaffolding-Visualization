@@ -20,7 +20,7 @@ RESULT_DIR = 'results/'
 # Reference-style palette
 cmd.set_color('helix_purple', [0.60, 0.55, 0.78])
 cmd.set_color('sheet_gold',   [0.75, 0.55, 0.30])
-cmd.set_color('line_grey',    [0.30, 0.30, 0.30])
+cmd.set_color('line_grey',    [0.33, 0.33, 0.33])
 cmd.set_color('motif_red',    [0.80, 0.40, 0.40])
 
 # Cel-shaded look: black outlines + rounded helices (visible only in raytraced PNG)
@@ -56,10 +56,11 @@ for pdb in pdb_list:
     # Thin grey atomic lines — the wire-through-structure look from the references
     cmd.show('lines', pdb)
     cmd.color('line_grey', pdb)
-    cmd.set('line_width', 2.0)
+    cmd.set('line_width', 1.6)
 
     # Motif highlighting: thick sticks on motif residue side chains, red color
     # only on the conditioning atoms (tip atoms) — matches the paper's figure style.
+    orient_target = pdb
     if args.motif and is_benchmark_pdb(pdb):
         info = get_motif_info(
             generated_pdb_path=DATA_DIR + pdb + '.pdb',
@@ -68,10 +69,11 @@ for pdb in pdb_list:
         resi_sel = f"{pdb} and resi {info['selection']}"
         atom_sel = f"{pdb} and ({info['atom_selection']})"
         cmd.show('sticks', resi_sel)
-        cmd.set('stick_radius', 0.18, resi_sel)
+        cmd.set('stick_radius', 0.30, resi_sel)
         cmd.color('motif_red', atom_sel)
+        # orient_target = resi_sel
 
-    cmd.orient(pdb)
+    cmd.orient(orient_target)
     cmd.zoom(pdb, buffer=2)
 
     if args.interactive:

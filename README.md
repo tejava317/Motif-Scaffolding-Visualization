@@ -3,7 +3,7 @@
 PyMOL renderer for motif-scaffolding outputs — purple helices, gold sheets, and motif residues highlighted in coral red.
 
 <p align="center">
-  <img src="assets/sample_visual.png" alt="sample" width="500">
+  <img src="assets/sample_visual.png" alt="sample" width="600">
 </p>
 
 ## Setup
