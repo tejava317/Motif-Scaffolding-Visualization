@@ -111,13 +111,26 @@ for pdb in pdb_list:
 
     if motif_info is not None:
         os.makedirs(MOTIFS_DIR, exist_ok=True)
+        # Kill depth-cue fog and use ortho projection so the close-up background
+        # stays crisp instead of fading toward the (white) background color.
+        cmd.set('depth_cue', 0)
+        cmd.set('fog', 0)
+        cmd.set('ray_trace_fog', 0)
+        cmd.set('orthoscopic', 1)
         for idx, resi in enumerate(motif_info['motif_resi']):
             letter = chr(ord('a') + idx)
             cmd.zoom(f"{pdb} and resi {resi}", buffer=3)
+            # cmd.zoom tightens the clip slab around the residue, which crops
+            # the rest of the protein. Widen it so back helices stay visible.
+            cmd.clip('slab', 200)
             print(f'[auto_render] Rendering motif {letter} (resi {resi}) for {pdb}...')
             cmd.ray(2000, 2000)
             motif_out = os.path.join(MOTIFS_DIR, f'{pdb}_motif_{letter}.png')
             cmd.png(motif_out, dpi=300)
             print(f'[auto_render] Saved {motif_out}')
+        cmd.set('depth_cue', 1)
+        cmd.set('fog', 1)
+        cmd.set('ray_trace_fog', 1)
+        cmd.set('orthoscopic', 0)
 
     cmd.delete(pdb)
